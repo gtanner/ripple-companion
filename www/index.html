@@ -10,12 +10,13 @@
     <body>
         <section class="app">
             <h1>Ripple Companion</h1>
-            <section id="deviceready">
-                <p id="connect" class="status pending">Connect to Ripple</p>
-                <p class="status complete blink hide">Connected to Ripple</p>
-            </section>
             <section id="search" class="box">
-            	<input id="where-is-ripple" type="url" placeholder="http://169.254.0.2:3000/proxy" />
+            	<input id="where-is-ripple" type="url" placeholder="127.0.0.1" />
+            </section>
+            <section id="rippleconnected">
+                <p class="status pending">Connect to Ripple</p>
+                <p class="status complete blink hide">Connected to Ripple</p>
+                <p class="status reconnect hide">Change server</p>
             </section>
         </section>
         <script type="text/javascript" src="cordova.js"></script>

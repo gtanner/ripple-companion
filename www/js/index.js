@@ -1,22 +1,66 @@
 var app = {
     initialize: function() {
         this.bind();
+
+        var ip = localStorage["ripple-ip"];
+        if (ip) {
+            document.getElementById('where-is-ripple').value = ip;
+            document.querySelector('#rippleconnected .pending').click();
+        }
     },
     bind: function() {
         document.addEventListener('deviceready', function () {
             console.log("deviceready");
         });
-        document.getElementById('connect').addEventListener('click', function () {
-            app.report('deviceready');
-            document.getElementById('search').style.display = 'none';
+        document.querySelector("#rippleconnected .pending").addEventListener('click', function () {
+            var ip = document.getElementById('where-is-ripple').value;
+
+            app.connect(ip, function () {
+                app.connected();
+                localStorage['ripple-ip'] = ip;
+            },
+            function () {
+                alert("well fuck: " + ip);
+                app.disconnected();
+            });
+        });
+
+        document.querySelector("#rippleconnected .reconnect").addEventListener('click', function () {
+            delete localStorage['ripple-ip'];
+            app.disconnected();
         });
     },
-    report: function(id) { 
-        console.log("report:" + id);
-        // hide the .pending <p> and show the .complete <p>
-        document.querySelector('#' + id + ' .pending').className += ' hide';
-        var completeElem = document.querySelector('#' + id + ' .complete');
+    connected: function() { 
+        document.querySelector('#rippleconnected .pending').className += ' hide';
+        var completeElem = document.querySelector('#rippleconnected .complete');
         completeElem.className = completeElem.className.split('hide').join('');
+
+        var reconnectElem = document.querySelector('#rippleconnected .reconnect');
+        reconnectElem.className = reconnectElem.className.split('hide').join('');
+
+        document.getElementById('search').style.display = 'none';
+    },
+    disconnected: function () {
+        document.querySelector('#rippleconnected .complete').className += ' hide';
+        document.querySelector('#rippleconnected .reconnect').className += ' hide';
+
+        var pending = document.querySelector('#rippleconnected .pending');
+        pending.className = pending.className.split('hide').join('');
+
+        document.getElementById('search').style.display = '';
+    },
+    connect: function (ip, success, fail) {
+        var script = document.createElement('script');
+
+        script.src = "http://" + ip + "/socket.io/socket.io.js";
+        script.onerror = function () {
+            fail();
+        };
+        script.onload = function () {
+            success();
+        };
+
+        document.body.appendChild(script);
     },
     exec: function (service, action, args, done) {
         //This method probably doens't need to exist. 
