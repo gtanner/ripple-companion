@@ -1,6 +1,6 @@
 {
     "id":"io.cordova.ripplecompanion",
-    "name":"Ripple Compainion",
+    "name":"Ripple Companion",
     "blackberry":{
         "qnx":{
             "bbwp":"/Users/gtanner/Projects/cordova-blackberry/sdk/target/zip",
