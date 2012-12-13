@@ -1,0 +1,14 @@
+{
+    "id":"io.cordova.ripplecompanion",
+    "name":"Ripple Compainion",
+    "blackberry":{
+        "qnx":{
+            "bbwp":"/Users/gtanner/Projects/cordova-blackberry/sdk/target/zip",
+            "signing_password":"123456",
+            "device_ip":"169.254.0.1",
+            "device_password":"asdf",
+            "sim_ip":"169.254.0.1",
+            "sim_password":""
+        }
+    }
+}
