@@ -15,8 +15,8 @@ var app = {
         document.querySelector("#rippleconnected .pending").addEventListener('click', function () {
             var ip = document.getElementById('where-is-ripple').value;
 
-            app.connect(ip, function () {
-                app.connected();
+            app.connect(ip, function (socket) {
+                app.connected(socket);
                 localStorage['ripple-ip'] = ip;
             },
             function () {
@@ -30,7 +30,7 @@ var app = {
             app.disconnected();
         });
     },
-    connected: function() { 
+    connected: function(socket) { 
         document.querySelector('#rippleconnected .pending').className += ' hide';
         var completeElem = document.querySelector('#rippleconnected .complete');
         completeElem.className = completeElem.className.split('hide').join('');
@@ -39,6 +39,10 @@ var app = {
         reconnectElem.className = reconnectElem.className.split('hide').join('');
 
         document.getElementById('search').style.display = 'none';
+
+        socket.on('exec', function(data, callback) {
+            app.exec(data.service, data.action, data.args, callback);
+        });
     },
     disconnected: function () {
         document.querySelector('#rippleconnected .complete').className += ' hide';
@@ -57,7 +61,11 @@ var app = {
             fail();
         };
         script.onload = function () {
-            success();
+            var socket = io.connect('http://' + ip);
+            socket.on('connect', function() {
+                socket.emit('set-role', {role:'device',name:device.name});
+                success(socket);
+            });
         };
 
         document.body.appendChild(script);
@@ -75,10 +83,10 @@ var app = {
         //
         //This is just a quick map to show that concept before we get all the socket.io stuff in
         cordova.exec(function () {
-            done({callback: "success", args: arguments});
+            done({win: true, args: arguments});
         },
         function () {
-            done({callback: "fail", args: arguments });
+            done({win: false, args: arguments });
         },
         service, action, args);
     }
