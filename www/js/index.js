@@ -7,10 +7,14 @@ var app = {
             document.getElementById('where-is-ripple').value = ip;
             document.querySelector('#rippleconnected .pending').click();
         }
+
     },
     bind: function() {
         document.addEventListener('deviceready', function () {
             console.log("deviceready");
+            if (navigator.connection.type === 'none') {
+                document.getElementById('error').innerText = 'Not connected to network';
+            }
         });
         document.querySelector("#rippleconnected .pending").addEventListener('click', function () {
             var ip = document.getElementById('where-is-ripple').value;
@@ -86,7 +90,7 @@ var app = {
             done({win: true, args: arguments});
         },
         function () {
-            done({win: false, args: arguments });
+            done({win: false, args: arguments});
         },
         service, action, args);
     }

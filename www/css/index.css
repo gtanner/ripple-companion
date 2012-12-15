@@ -99,6 +99,16 @@ h1 {
     width:180px;
 }
 
+#error {
+    color: red;
+    font-size:1.5em;
+    font-weight:300;
+    margin:0px;
+    overflow:visible;
+    padding:0px;
+    text-align:center;
+}
+
 /* portrait */
 /* @media screen and (max-aspect-ratio: 1/1) */
 .app {
