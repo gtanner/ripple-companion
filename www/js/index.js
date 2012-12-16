@@ -1,3 +1,17 @@
+function go() {
+    console.log('going');
+    var ip = document.getElementById('where-is-ripple').value;
+
+    app.connect(ip, function (socket) {
+        app.connected(socket);
+        localStorage['ripple-ip'] = ip;
+    },
+    function () {
+        alert("well fuck: " + ip);
+        app.disconnected();
+    });
+}
+
 var app = {
     initialize: function() {
         this.bind();
@@ -5,7 +19,7 @@ var app = {
         var ip = localStorage["ripple-ip"];
         if (ip) {
             document.getElementById('where-is-ripple').value = ip;
-            document.querySelector('#rippleconnected .pending').click();
+            go();
         }
 
     },
@@ -16,18 +30,7 @@ var app = {
                 document.getElementById('error').innerText = 'Not connected to network';
             }
         });
-        document.querySelector("#rippleconnected .pending").addEventListener('click', function () {
-            var ip = document.getElementById('where-is-ripple').value;
-
-            app.connect(ip, function (socket) {
-                app.connected(socket);
-                localStorage['ripple-ip'] = ip;
-            },
-            function () {
-                alert("well fuck: " + ip);
-                app.disconnected();
-            });
-        });
+        document.querySelector("#rippleconnected .pending").addEventListener('click', go);
 
         document.querySelector("#rippleconnected .reconnect").addEventListener('click', function () {
             delete localStorage['ripple-ip'];
@@ -46,6 +49,10 @@ var app = {
 
         socket.on('exec', function(data, callback) {
             app.exec(data.service, data.action, data.args, callback);
+        });
+        socket.on('documentload', function() {
+            console.log('reloading');
+            location.reload();
         });
     },
     disconnected: function () {
